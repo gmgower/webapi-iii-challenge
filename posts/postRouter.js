@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
     })
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validatePostId, (req, res) => {
     const id = req.params.id;
 
     PostDb
@@ -36,7 +36,7 @@ router.get('/:id', (req, res) => {
     }) 
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validatePostId, (req, res) => {
     const {id} = req.params;
     PostDb
     .remove(id)
@@ -47,7 +47,7 @@ router.delete('/:id', (req, res) => {
     })
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validatePostId, (req, res) => {
     const {id} = req.params;
     const changes = req.body;
     PostDb.update(id, changes)
@@ -69,7 +69,17 @@ router.put('/:id', (req, res) => {
 // custom middleware
 
 function validatePostId(req, res, next) {
-
+    const {id} = req.params;
+    PostDb.getById(id)
+    .then(post => {
+        console.log("post", post)
+        if(post) {
+            req.post = post;
+            next()
+        } else {
+            res.status(400).json({error: "Post with ${id} does not exist."})
+        }
+    })
 };
 
 module.exports = router;

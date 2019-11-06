@@ -10,6 +10,7 @@ const postRouter = require('./posts/postRouter.js')
 
 // ? s5
 server.use(express.json())
+server.use(logger);
 
 // ? s9
 server.use('/users', userRouter);
@@ -22,7 +23,8 @@ server.get('/', (req, res) => {
 //custom middleware
 
 function logger(req, res, next) {
-
+  console.log(`The Logger: [${new Date().toISOString()}] ${req.method} to ${req.url}`);
+  next()
 };
 
 module.exports = server;
