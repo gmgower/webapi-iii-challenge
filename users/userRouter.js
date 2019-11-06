@@ -3,6 +3,7 @@
 const express = require('express');
 // ? s7 import db
 const UsersDb = require('./userDb')
+const PostDb = require('../posts/postDb')
 // ? s8
 const router = express.Router();
 
@@ -26,14 +27,14 @@ router.post('/', (req, res) => {
 router.post('/:id/posts', (req, res) => {
     const postInfo = {...req.body, post_id: req.params.id}
 
-    // UsersDb.insert(postInfo)
+    PostDb.insert(postInfo)
     .then(post => {
         res.status(210).json(post)
     })
     .catch(error => {
         console.log(error)
         res.status(500).json({
-            message: "Error getting the post for the hub"
+            message: "Error getting the post for the database"
         })
     })
 });
